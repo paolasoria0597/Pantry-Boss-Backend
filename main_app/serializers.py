@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 class FloorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Floor
-        fields = '__all__'
+        fields = ['id', 'number', 'user']
+        read_only_frields = ['user']
 
 class PantrySerializer(serializers.ModelSerializer):
     class Meta:
