@@ -1,8 +1,6 @@
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
 from . import views
 
-router = DefaultRouter()
 
 urlpatterns = [
     path('floors/', views.FloorListCreateView.as_view(), name='floor-list'),
