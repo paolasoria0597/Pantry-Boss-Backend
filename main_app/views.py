@@ -21,19 +21,23 @@ from .serializers import FloorSerializer, PantrySerializer, DispenserSerializer,
 class FloorListCreateView(generics.ListCreateAPIView):
     """
     Handles:
-    - GET: List all floors
+    - GET: List all floors, optionally filtered by user
     - POST: Create a new floor
     """
-    serializer_class = FloorSerializer
     serializer_class = FloorSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        """return floors filtered for logged in user"""
-        return Floor.objects.filter(user=self.request.user)
+        """Return floors filtered for the logged-in user or by query parameter"""
+        user = self.request.user
+        user_id = self.request.query_params.get('user')
+
+        if user_id:
+            return Floor.objects.filter(user_id=user_id)
+        return Floor.objects.filter(user=user)
 
     def perform_create(self, serializer):
-        """associate logged in user with new created floor"""
+        """Associate the logged-in user with the newly created floor"""
         serializer.save(user=self.request.user)
 
 
@@ -58,11 +62,18 @@ class FloorDetailView(generics.RetrieveUpdateDestroyAPIView):
 class PantryListCreateView(generics.ListCreateAPIView):
     """
     Handles:
-    - GET: List all pantries
+    - GET: List all pantries, optionally filtered by floor
     - POST: Create a new pantry
     """
-    queryset = Pantry.objects.all()
     serializer_class = PantrySerializer
+
+    def get_queryset(self):
+        """Return pantries filtered by the floor query parameter if provided"""
+        floor_id = self.request.query_params.get('floor')
+
+        if floor_id:
+            return Pantry.objects.filter(floor_id=floor_id)
+        return Pantry.objects.all()
 
 
 # Handles retrieving, updating, or deleting a specific pantry by ID
@@ -86,11 +97,18 @@ class PantryDetailView(generics.RetrieveUpdateDestroyAPIView):
 class DispenserListCreateView(generics.ListCreateAPIView):
     """
     Handles:
-    - GET: List all dispensers
+    - GET: List all dispensers, optionally filtered by pantry
     - POST: Create a new dispenser
     """
-    queryset = Dispenser.objects.all()
     serializer_class = DispenserSerializer
+
+    def get_queryset(self):
+        """Return dispensers filtered by the pantry query parameter if provided"""
+        pantry_id = self.request.query_params.get('pantry')
+
+        if pantry_id:
+            return Dispenser.objects.filter(pantry_id=pantry_id)
+        return Dispenser.objects.all()
 
 
 # Handles retrieving, updating, or deleting a specific dispenser by ID
