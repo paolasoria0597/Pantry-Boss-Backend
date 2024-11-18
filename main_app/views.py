@@ -24,8 +24,17 @@ class FloorListCreateView(generics.ListCreateAPIView):
     - GET: List all floors
     - POST: Create a new floor
     """
-    queryset = Floor.objects.all()
     serializer_class = FloorSerializer
+    serializer_class = FloorSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """return floors filtered for logged in user"""
+        return Floor.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        """associate logged in user with new created floor"""
+        serializer.save(user=self.request.user)
 
 
 # This view handles retrieving, updating, or deleting a specific floor by ID
