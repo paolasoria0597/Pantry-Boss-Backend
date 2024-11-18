@@ -204,13 +204,6 @@ class CreateUserView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
-from rest_framework import status, permissions
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.contrib.auth import authenticate
-from drf_yasg.utils import swagger_auto_schema
-from .serializers import UserSerializer, LoginSerializer
 
 # login view
 class LoginView(APIView):
