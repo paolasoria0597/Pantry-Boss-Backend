@@ -14,7 +14,7 @@ BASE_URL = 'http://localhost:8000'
 DISPENSER_URL = f'{BASE_URL}/api/dispensers/'
 
 # API endpoint to authenticate and get a token
-AUTH_URL = f'{BASE_URL}/api/auth/jwt/create/'
+AUTH_URL = f'{BASE_URL}/api/users/login/'
 
 # Replace with your actual username and password that you set in generate_sample_data script
 USERNAME = 'sampleuser'
